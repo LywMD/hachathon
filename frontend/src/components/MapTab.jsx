@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { MapPin, Search, Star, AlertTriangle, ChevronRight, GraduationCap } from 'lucide-react';
@@ -27,6 +27,14 @@ const createCustomPin = (score, risk) => {
 function MapController({ center, zoom }) {
   const map = useMap();
   map.setView(center, zoom, { animate: true });
+
+  // Recalculate map size when the container resizes (window resize / responsive layout switch)
+  useEffect(() => {
+    const observer = new ResizeObserver(() => map.invalidateSize());
+    observer.observe(map.getContainer());
+    return () => observer.disconnect();
+  }, [map]);
+
   return null;
 }
 
@@ -90,7 +98,7 @@ export default function MapTab({ institutions, selectedInst, onSelectInst, onOpe
   };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '400px 1fr', gap: '22px', height: 'calc(100vh - 110px)' }}>
+    <div className="map-layout">
       {/* Left Control Panel */}
       <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#ffffff' }}>
         <div style={{ padding: '18px', borderBottom: '1px solid #e2e8f0', background: '#f8fafc' }}>
@@ -263,17 +271,17 @@ export default function MapTab({ institutions, selectedInst, onSelectInst, onOpe
       </div>
 
       {/* Right Leaflet Map */}
-      <div className="glass-panel" style={{ height: '100%', overflow: 'hidden', position: 'relative', background: '#f8fafc' }}>
+      <div className="glass-panel map-panel" style={{ overflow: 'hidden', position: 'relative', background: '#f8fafc' }}>
         <MapContainer
           center={mapCenter}
           zoom={mapZoom}
           style={{ width: '100%', height: '100%' }}
           zoomControl={false}
         >
-          {/* CartoDB Voyager Light Tiles */}
+          {/* OpenStreetMap Tiles */}
           <TileLayer
-            attribution='&copy; <a href="https://carto.com/">CARTO</a> Voyager'
-            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <MapController center={mapCenter} zoom={mapZoom} />
 

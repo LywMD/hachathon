@@ -455,6 +455,33 @@ body {
   to { transform: translateX(0); }
 }
 
+/* Map Tab Layout */
+.map-layout {
+  display: grid;
+  grid-template-columns: 400px minmax(0, 1fr);
+  gap: 22px;
+  height: calc(100vh - 110px);
+}
+
+.map-panel {
+  height: 100%;
+}
+
+@media (max-width: 900px) {
+  .map-layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 70vh auto;
+    height: auto;
+  }
+  .map-layout > .glass-panel:first-child {
+    order: 2;
+    max-height: 80vh;
+  }
+  .map-panel {
+    order: 1;
+  }
+}
+
 /* Print Only */
 @media print {
   body {
