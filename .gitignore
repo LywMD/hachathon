@@ -32,3 +32,6 @@ yarn-debug.log*
 Thumbs.db
 .idea/
 .vscode/
+
+# Claude Code local files
+.claude/
